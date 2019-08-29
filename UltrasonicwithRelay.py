@@ -27,7 +27,7 @@ GPIO_RELAY = 20
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
 GPIO.setup(GPIO_LED, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(GPIO_RELAY,GPIO.OUT)
+GPIO.setup(GPIO_RELAY,GPIO.OUT, initial=GPIO.HIGH)
 
 count1 = 0
 count2 = 0
@@ -41,7 +41,6 @@ def distance():
     GPIO.output(GPIO_TRIGGER, True)
  
     # set Trigger after 0.01ms to LOW
-    # time.sleep(0.00001)
     time.sleep(1)
     GPIO.output(GPIO_TRIGGER, False)
  
@@ -73,39 +72,44 @@ if __name__ ==     '__main__':
             print ("Measured Distance = %.1f cm" % dist)
             if (count1 == 0) :
                 if ( dist > 40 and dist < 220):
+                    # Enter Condition
+                    # Switch ON bulb and LED
                     GPIO.output (GPIO_RELAY,GPIO.LOW)
                     GPIO.output(GPIO_LED, GPIO.HIGH)
                     count1 += 1
                     count2 = 0
-                    print "Motion dec", motiondec
                     print ("Measured Distance = %.1f cm" % dist)
-                    print ("----------------------")
+                    print ("---------- State 1 ------------")
                     time.sleep(1)
 
             else:
                 if ( dist > 40 and dist < 220):
+                    # Stay Condition
                     GPIO.output (GPIO_RELAY,GPIO.LOW)
                     GPIO.output(GPIO_LED, GPIO.HIGH)
                     count1 += 1
-                    #print ("Measured Distance = %.1f cm" % dist)
-                    print ("----------------------")
+                    print ("Measured Distance = %.1f cm" % dist)
+                    print ("---------- State 2 ------------")
                     time.sleep(1)
 
                 else:
                     if (count2 == 0 ) :
+                        # Exit Condition
+                        # Switch OFF bulb and LED
                         GPIO.output (GPIO_RELAY, GPIO.HIGH)
                         GPIO.output(GPIO_LED, GPIO.LOW)
                         count2 += 1
                         print ("Measured Distance = %.1f cm" % dist)
-                        print ("----------------------") 
+                        print ("---------- State 3 ------------") 
                         time.sleep(1)
 
                     else :
+                         # Nobody Condition
                          GPIO.output (GPIO_RELAY, GPIO.HIGH)
                          GPIO.output(GPIO_LED, GPIO.LOW)
                          count1 = 0
-                         #print ("Measured Distance = %.1f cm" % dist)
-                         print ("----------------------") 
+                         print ("Measured Distance = %.1f cm" % dist)
+                         print ("---------- State 4 ------------") 
                          time.sleep(1)
         print ("-------------------------------------------")
  
